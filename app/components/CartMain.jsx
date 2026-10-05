@@ -124,7 +124,7 @@ export function CartMain({layout, cart: originalCart}) {
             <p id="cart-lines" className="sr-only">
               Line items
             </p>
-            <div>
+            <div className="cart-lines-scrollable">
               <ul aria-labelledby="cart-lines">
                 {(cart?.lines?.nodes ?? []).map((line) => {
                   if (
