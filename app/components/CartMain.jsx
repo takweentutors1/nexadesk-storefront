@@ -184,84 +184,22 @@ function CartEmpty({hidden = false, layout}) {
       </div>
 
       <div className="cart-empty-text">
-        <h3 className="cart-empty-heading">Your Cart is Empty</h3>
+        <h3 className="cart-empty-heading">Your cart is empty</h3>
         <p className="cart-empty-desc">
-          Ready to engineer your clean, clutter-free workspace? Find the exact
-          docking station and cable architecture tailored for your laptop.
+          Looks like you haven't added any workspace gear yet.
         </p>
       </div>
 
       <div className="cart-empty-actions">
         <Link
-          to="/find-my-setup"
+          to="/collections/all"
           onClick={close}
           prefetch="viewport"
           className="cart-empty-btn-primary"
         >
-          <span>Find My Desk Setup (2-Min Quiz)</span>
+          <span>Continue Shopping</span>
           <span className="cta-arrow">→</span>
         </Link>
-        <Link
-          to="/collections/all"
-          onClick={close}
-          prefetch="viewport"
-          className="cart-empty-btn-secondary"
-        >
-          <span>Browse All Workstation Gear</span>
-        </Link>
-      </div>
-
-      <div className="cart-empty-suggestions">
-        <div className="cart-empty-suggestions-title">
-          <span>POPULAR ARCHITECTURES</span>
-        </div>
-        <div className="cart-empty-quick-pills">
-          <Link
-            to="/collections/all"
-            onClick={close}
-            prefetch="viewport"
-            className="cart-empty-quick-item"
-          >
-            <div className="quick-item-badge">4K 60Hz Dual</div>
-            <div className="quick-item-name">D2 Link 100 Dual Dock</div>
-            <div className="quick-item-price">£179.00</div>
-          </Link>
-          <Link
-            to="/collections/all"
-            onClick={close}
-            prefetch="viewport"
-            className="cart-empty-quick-item"
-          >
-            <div className="quick-item-badge">Flagship 4x Display</div>
-            <div className="quick-item-name">D4 Max Enterprise Dock</div>
-            <div className="quick-item-price">£279.00</div>
-          </Link>
-          <Link
-            to="/collections/all"
-            onClick={close}
-            prefetch="viewport"
-            className="cart-empty-quick-item compare-quick-pill"
-          >
-            <div className="quick-item-badge">Browse Collections</div>
-            <div className="quick-item-name">Explore All Products</div>
-            <div className="quick-item-arrow">View All →</div>
-          </Link>
-        </div>
-      </div>
-
-      <div className="cart-empty-perks">
-        <div className="cart-perk-item">
-          <span className="perk-icon">🇬🇧</span>
-          <span className="perk-text">Free UK Delivery over £300</span>
-        </div>
-        <div className="cart-perk-item">
-          <span className="perk-icon">⚡</span>
-          <span className="perk-text">30-Day Desk Guarantee</span>
-        </div>
-        <div className="cart-perk-item">
-          <span className="perk-icon">🛡️</span>
-          <span className="perk-text">2-Year British Hardware Warranty</span>
-        </div>
       </div>
     </div>
   );
