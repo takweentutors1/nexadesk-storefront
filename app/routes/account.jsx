@@ -40,46 +40,47 @@ export default function AccountLayout() {
   /** @type {LoaderReturnData} */
   const {customer} = useLoaderData();
 
-  const heading = customer
-    ? customer.firstName
-      ? `Welcome, ${customer.firstName}`
-      : `Welcome to your account.`
+  const fullName = customer
+    ? [customer.firstName, customer.lastName].filter(Boolean).join(' ') || 'Valued Customer'
     : 'Account Details';
 
   return (
-    <div className="account">
-      <h1>{heading}</h1>
-      <br />
-      <AccountMenu />
-      <br />
-      <br />
-      <Outlet context={{customer}} />
+    <div className="account-container">
+      <div className="account-header">
+        <h1 className="account-greeting">Welcome, {fullName}</h1>
+        <AccountMenu />
+      </div>
+      <div className="account-content">
+        <Outlet context={{customer}} />
+      </div>
     </div>
   );
 }
 
 function AccountMenu() {
-  function isActiveStyle({isActive, isPending}) {
-    return {
-      fontWeight: isActive ? 'bold' : undefined,
-      color: isPending ? 'grey' : 'black',
-    };
-  }
-
   return (
-    <nav role="navigation">
-      <NavLink to="/account/orders" style={isActiveStyle}>
-        Orders &nbsp;
+    <nav className="account-nav" role="navigation" aria-label="Account navigation">
+      <NavLink
+        to="/account/orders"
+        className={({isActive}) => `account-nav-link ${isActive ? 'is-active' : ''}`}
+      >
+        Orders
       </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/profile" style={isActiveStyle}>
-        &nbsp; Profile &nbsp;
+      <span className="account-nav-separator">|</span>
+      <NavLink
+        to="/account/profile"
+        className={({isActive}) => `account-nav-link ${isActive ? 'is-active' : ''}`}
+      >
+        Profile
       </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/addresses" style={isActiveStyle}>
-        &nbsp; Addresses &nbsp;
+      <span className="account-nav-separator">|</span>
+      <NavLink
+        to="/account/addresses"
+        className={({isActive}) => `account-nav-link ${isActive ? 'is-active' : ''}`}
+      >
+        Addresses
       </NavLink>
-      &nbsp;|&nbsp;
+      <span className="account-nav-separator">|</span>
       <Logout />
     </nav>
   );
@@ -88,7 +89,9 @@ function AccountMenu() {
 function Logout() {
   return (
     <Form className="account-logout" method="POST" action="/account/logout">
-      &nbsp;<button type="submit">Sign out</button>
+      <button type="submit" className="account-signout-btn">
+        Sign out
+      </button>
     </Form>
   );
 }

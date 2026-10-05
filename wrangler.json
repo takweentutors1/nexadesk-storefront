@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nexadesk-storefront",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-10-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "PUBLIC_STORE_DOMAIN": "nexa-desk-7nlxxvwi.myshopify.com",
+    "PUBLIC_STOREFRONT_ID": "1000181336",
+    "PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID": "7bf897ea-d37f-42b0-b1a3-228f3ed4ee50",
+    "PUBLIC_CUSTOMER_ACCOUNT_API_URL": "https://shopify.com/101949833580",
+    "PUBLIC_STOREFRONT_API_TOKEN": "ffbbef3cb11edefba5947e1fbecb316a",
+    "SHOP_ID": "101949833580",
+    "PUBLIC_GTM_ID": "GTM-NEXADESK",
+    "OAUTH_AUTHORIZE_ENDPOINT": "https://shopify.com/authentication/101949833580/oauth/authorize",
+    "OAUTH_TOKEN_ENDPOINT": "https://shopify.com/authentication/101949833580/oauth/token",
+    "OAUTH_LOGOUT_ENDPOINT": "https://shopify.com/authentication/101949833580/logout"
+  }
+}
