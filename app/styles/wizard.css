@@ -1536,6 +1536,26 @@
   font-family: monospace;
 }
 
+.item-stock-tag.out-of-stock {
+  font-size: 0.72rem;
+  color: #f87171;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.bundle-item-row.item-out-of-stock {
+  opacity: 0.55;
+  border-style: dashed;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.bundle-item-row.item-out-of-stock .item-price-tag {
+  color: #f87171;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .item-price-tag {
   font-size: 0.95rem;
   font-weight: 700;

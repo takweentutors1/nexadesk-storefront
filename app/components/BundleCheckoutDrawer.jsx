@@ -14,10 +14,27 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
 
   const {profile, dock, monitor, accessories = []} = bundle;
 
-  // Compute prices
-  const dockPrice = parseFloat(dock?.price || '0');
-  const monitorPrice = parseFloat(monitor?.price || '0');
-  const accessoriesPrice = accessories.reduce((sum, item) => sum + parseFloat(item.price || '0'), 0);
+  // Filter only items that are in stock and available for sale
+  const isItemAvailable = (item) => {
+    if (!item) return false;
+    // Check availableForSale flag if present, else check inventoryQty if defined
+    if (typeof item.availableForSale === 'boolean' && !item.availableForSale) return false;
+    if (typeof item.inventoryQty === 'number' && item.inventoryQty <= 0) return false;
+    return Boolean(item.variantId);
+  };
+
+  const isDockInStock = isItemAvailable(dock);
+  const isMonitorInStock = isItemAvailable(monitor);
+  const availableAccessories = accessories.filter(isItemAvailable);
+  const outOfStockAccessories = accessories.filter((acc) => !isItemAvailable(acc));
+
+  // Compute prices only for available in-stock items
+  const dockPrice = isDockInStock ? parseFloat(dock?.price || '0') : 0;
+  const monitorPrice = isMonitorInStock ? parseFloat(monitor?.price || '0') : 0;
+  const accessoriesPrice = availableAccessories.reduce(
+    (sum, item) => sum + parseFloat(item.price || '0'),
+    0,
+  );
 
   const subtotal = dockPrice + monitorPrice + accessoriesPrice;
 
@@ -31,11 +48,11 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
   const shippingCost = qualifiesForFreeShipping ? 0 : 7.95;
   const finalTotal = priceAfterDiscount + shippingCost;
 
-  // Prepare Cart Line Inputs with proper attributes for Shopify Cart & Order Line Items
+  // Prepare Cart Line Inputs ONLY for items available in stock
   const bundleLines = useMemo(() => {
     const lines = [];
 
-    if (dock?.variantId) {
+    if (isDockInStock && dock?.variantId) {
       lines.push({
         merchandiseId: dock.variantId,
         quantity: 1,
@@ -47,7 +64,7 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
       });
     }
 
-    if (monitor?.variantId) {
+    if (isMonitorInStock && monitor?.variantId) {
       lines.push({
         merchandiseId: monitor.variantId,
         quantity: 1,
@@ -59,7 +76,7 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
       });
     }
 
-    accessories.forEach((acc) => {
+    availableAccessories.forEach((acc) => {
       if (acc.variantId) {
         lines.push({
           merchandiseId: acc.variantId,
@@ -74,7 +91,7 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
     });
 
     return lines;
-  }, [dock, monitor, accessories, profile, setupRefId]);
+  }, [dock, monitor, availableAccessories, isDockInStock, isMonitorInStock, profile, setupRefId]);
 
   // Confetti particles generator
   const confettiItems = useMemo(() => {
@@ -166,34 +183,46 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
           <h4 className="bundle-items-heading">Included in Your Setup ({bundleLines.length} Items):</h4>
 
           {dock && (
-            <div className="bundle-item-row">
-              <div className="item-icon-box">⚡</div>
+            <div className={`bundle-item-row ${!isDockInStock ? 'item-out-of-stock' : ''}`}>
+              <div className="item-icon-box">{isDockInStock ? '⚡' : '⚠️'}</div>
               <div className="item-details">
                 <span className="item-title">{dock.title}</span>
                 <span className="item-meta">
                   {dock.charging_output_watts || dock.dock_charging_output}W Power Delivery • {(dock.video_outputs || dock.dock_video_outputs || []).join(' & ')}
                 </span>
-                <span className="item-attr-tag">_SetupReference: {setupRefId}</span>
+                {isDockInStock ? (
+                  <span className="item-attr-tag">_SetupReference: {setupRefId}</span>
+                ) : (
+                  <span className="item-stock-tag out-of-stock">Temporarily Out of Stock (Excluded from Cart)</span>
+                )}
               </div>
-              <div className="item-price-tag">£{dockPrice.toFixed(2)}</div>
+              <div className="item-price-tag">
+                {isDockInStock ? `£${dockPrice.toFixed(2)}` : 'Out of Stock'}
+              </div>
             </div>
           )}
 
           {monitor && (
-            <div className="bundle-item-row">
-              <div className="item-icon-box">🖥️</div>
+            <div className={`bundle-item-row ${!isMonitorInStock ? 'item-out-of-stock' : ''}`}>
+              <div className="item-icon-box">{isMonitorInStock ? '🖥️' : '⚠️'}</div>
               <div className="item-details">
                 <span className="item-title">{monitor.title}</span>
                 <span className="item-meta">
                   {monitor.resolution || '4K Screen'} • {(monitor.video_inputs || monitor.monitor_video_inputs || []).join(' & ')} Input
                 </span>
-                <span className="item-attr-tag">_DeviceProfile: {profile?.code}</span>
+                {isMonitorInStock ? (
+                  <span className="item-attr-tag">_DeviceProfile: {profile?.code}</span>
+                ) : (
+                  <span className="item-stock-tag out-of-stock">Temporarily Out of Stock (Excluded from Cart)</span>
+                )}
               </div>
-              <div className="item-price-tag">£{monitorPrice.toFixed(2)}</div>
+              <div className="item-price-tag">
+                {isMonitorInStock ? `£${monitorPrice.toFixed(2)}` : 'Out of Stock'}
+              </div>
             </div>
           )}
 
-          {accessories.map((acc) => (
+          {availableAccessories.map((acc) => (
             <div key={acc.id} className="bundle-item-row accessory-row">
               <div className="item-icon-box">✨</div>
               <div className="item-details">
@@ -201,6 +230,18 @@ export function BundleCheckoutDrawer({bundle, onClose, isOpen}) {
                 <span className="item-meta">{acc.category || 'Ergonomic Accessory'}</span>
               </div>
               <div className="item-price-tag">£{parseFloat(acc.price).toFixed(2)}</div>
+            </div>
+          ))}
+
+          {outOfStockAccessories.map((acc) => (
+            <div key={acc.id} className="bundle-item-row accessory-row item-out-of-stock">
+              <div className="item-icon-box">⚠️</div>
+              <div className="item-details">
+                <span className="item-title">{acc.title}</span>
+                <span className="item-meta">{acc.category || 'Ergonomic Accessory'}</span>
+                <span className="item-stock-tag out-of-stock">Out of Stock (Excluded)</span>
+              </div>
+              <div className="item-price-tag">Out of Stock</div>
             </div>
           ))}
         </div>
