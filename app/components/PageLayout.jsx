@@ -81,7 +81,6 @@ function SearchAside() {
                   placeholder="Search products..."
                   ref={inputRef}
                   type="search"
-                  list={queriesDatalistId}
                   className="search-field-input"
                   autoComplete="off"
                   autoFocus
@@ -136,11 +135,10 @@ function SearchAside() {
                   <Link
                     onClick={closeSearch}
                     to={`${SEARCH_ENDPOINT}?q=${term.current}`}
+                    className="predictive-view-all-link"
                   >
-                    <p>
-                      View all results for <q>{term.current}</q>
-                      &nbsp; →
-                    </p>
+                    <span>View all results for &ldquo;{term.current}&rdquo;</span>
+                    <span className="view-all-arrow">&rarr;</span>
                   </Link>
                 ) : null}
               </>

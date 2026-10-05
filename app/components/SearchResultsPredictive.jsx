@@ -98,9 +98,11 @@ function SearchResultsPredictiveCollections({term, collections, closeSearch}) {
   if (!collections.length) return null;
 
   return (
-    <div className="predictive-search-result" key="collections">
-      <h5>Collections</h5>
-      <ul>
+    <div className="predictive-search-result predictive-search-collections" key="collections">
+      <div className="predictive-result-header">
+        <h5 className="predictive-result-title">Collections</h5>
+      </div>
+      <ul className="predictive-collections-list">
         {collections.map((collection) => {
           const collectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
@@ -110,17 +112,25 @@ function SearchResultsPredictiveCollections({term, collections, closeSearch}) {
 
           return (
             <li className="predictive-search-result-item" key={collection.id}>
-              <Link onClick={closeSearch} to={collectionUrl}>
-                {collection.image?.url && (
-                  <Image
-                    alt={collection.image.altText ?? ''}
-                    src={collection.image.url}
-                    width={50}
-                    height={50}
-                  />
+              <Link onClick={closeSearch} to={collectionUrl} className="predictive-collection-card">
+                {collection.image?.url ? (
+                  <div className="predictive-collection-thumb">
+                    <Image
+                      alt={collection.image.altText ?? ''}
+                      src={collection.image.url}
+                      width={48}
+                      height={48}
+                      aspectRatio="1/1"
+                    />
+                  </div>
+                ) : (
+                  <div className="predictive-collection-thumb placeholder">
+                    <span>📁</span>
+                  </div>
                 )}
-                <div>
-                  <span>{collection.title}</span>
+                <div className="predictive-collection-meta">
+                  <span className="predictive-collection-title">{collection.title}</span>
+                  <span className="predictive-view-action">Explore &rarr;</span>
                 </div>
               </Link>
             </li>
@@ -138,9 +148,11 @@ function SearchResultsPredictivePages({term, pages, closeSearch}) {
   if (!pages.length) return null;
 
   return (
-    <div className="predictive-search-result" key="pages">
-      <h5>Pages</h5>
-      <ul>
+    <div className="predictive-search-result predictive-search-pages" key="pages">
+      <div className="predictive-result-header">
+        <h5 className="predictive-result-title">Pages</h5>
+      </div>
+      <ul className="predictive-pages-list">
         {pages.map((page) => {
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
@@ -150,10 +162,9 @@ function SearchResultsPredictivePages({term, pages, closeSearch}) {
 
           return (
             <li className="predictive-search-result-item" key={page.id}>
-              <Link onClick={closeSearch} to={pageUrl}>
-                <div>
-                  <span>{page.title}</span>
-                </div>
+              <Link onClick={closeSearch} to={pageUrl} className="predictive-page-card">
+                <span className="predictive-page-title">{page.title}</span>
+                <span className="predictive-view-action">&rarr;</span>
               </Link>
             </li>
           );
