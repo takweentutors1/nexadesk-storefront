@@ -64,13 +64,13 @@ function CartAside({cart}) {
 function SearchAside() {
   const queriesDatalistId = useId();
   return (
-    <Aside type="search" heading="Search Workspace Store">
+    <Aside type="search" heading="Search">
       <div className="predictive-search-drawer">
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
             <div className="search-input-wrapper">
               <div className="search-field-pill">
-                <svg className="search-field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="search-field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -78,7 +78,7 @@ function SearchAside() {
                   name="q"
                   onChange={fetchResults}
                   onFocus={fetchResults}
-                  placeholder="Search docks, monitors, cables, stands..."
+                  placeholder="Search products..."
                   ref={inputRef}
                   type="search"
                   list={queriesDatalistId}
@@ -88,26 +88,11 @@ function SearchAside() {
                 />
               </div>
               <button type="button" className="search-submit-btn" onClick={goToSearch}>
-                Find
+                Search
               </button>
             </div>
           )}
         </SearchFormPredictive>
-
-        <div className="search-quick-tags">
-          <span className="quick-tags-label">Popular Searches</span>
-          <div className="quick-tags-list">
-            {['100W Dock', 'DisplayPort', 'HDMI Monitor', 'Studio 65', 'Laptop Stand'].map((tag) => (
-              <Link
-                key={tag}
-                to={`${SEARCH_ENDPOINT}?q=${encodeURIComponent(tag)}`}
-                className="search-tag-chip"
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </div>
 
         <SearchResultsPredictive>
           {({items, total, term, state, closeSearch}) => {
