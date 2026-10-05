@@ -170,9 +170,12 @@ function SearchResultsPredictiveProducts({term, products, closeSearch}) {
   if (!products.length) return null;
 
   return (
-    <div className="predictive-search-result" key="products">
-      <h5>Products</h5>
-      <ul>
+    <div className="predictive-search-result predictive-search-products" key="products">
+      <div className="predictive-result-header">
+        <h5 className="predictive-result-title">Matching Products</h5>
+        <span className="predictive-result-count">{products.length} found</span>
+      </div>
+      <ul className="predictive-products-list">
         {products.map((product) => {
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
@@ -184,18 +187,28 @@ function SearchResultsPredictiveProducts({term, products, closeSearch}) {
           const image = product?.selectedOrFirstAvailableVariant?.image;
           return (
             <li className="predictive-search-result-item" key={product.id}>
-              <Link to={productUrl} onClick={closeSearch}>
-                {image && (
-                  <Image
-                    alt={image.altText ?? ''}
-                    src={image.url}
-                    width={50}
-                    height={50}
-                  />
+              <Link to={productUrl} onClick={closeSearch} className="predictive-product-card">
+                {image ? (
+                  <div className="predictive-product-thumb">
+                    <Image
+                      alt={image.altText ?? product.title}
+                      src={image.url}
+                      width={64}
+                      height={64}
+                      aspectRatio="1/1"
+                    />
+                  </div>
+                ) : (
+                  <div className="predictive-product-thumb placeholder">
+                    <span>📦</span>
+                  </div>
                 )}
-                <div>
-                  <p>{product.title}</p>
-                  <small>{price && <Money data={price} />}</small>
+                <div className="predictive-product-meta">
+                  <p className="predictive-product-title">{product.title}</p>
+                  <div className="predictive-product-price-row">
+                    {price && <span className="predictive-product-price"><Money data={price} /></span>}
+                    <span className="predictive-view-action">View details &rarr;</span>
+                  </div>
                 </div>
               </Link>
             </li>
