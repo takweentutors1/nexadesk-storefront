@@ -33,6 +33,7 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       'https://*.myshopify.com',
       'https://nexadesk.takweendemo.com',
+      'https://nexadesk-storefront.takweencentreuk.workers.dev',
       'https://www.googletagmanager.com',
       'https://www.google-analytics.com',
       'https://analytics.google.com',
